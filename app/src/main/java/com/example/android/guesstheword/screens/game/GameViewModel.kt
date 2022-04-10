@@ -16,9 +16,11 @@
 
 package com.example.android.guesstheword.screens.game
 
+import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.util.*
 
 
 /**
@@ -27,11 +29,22 @@ import androidx.lifecycle.ViewModel
 class GameViewModel : ViewModel() {
 
     // TODO (01) Copy over the provided companion object with the timer constants
+    companion object {
+        //These represent different important times in the game, such as game length.
+        const val DONE = 0L
+        const val ONE_SECOND = 1000L
+        const val COUNTDOWN_TIME = 6000L
+    }
 
     // TODO (02) Create a timer field of type CountDownTimer
+    private val timer: CountDownTimer
+
 
     // TODO (03) Create a properly encapsulated LiveData for the current time called currentTime
     // Its type should be Long
+    private val _currentTime = MutableLiveData<Long>()
+    val currentTime = LiveData<Long>
+        get() = _currentTime
 
     // The current word
     private val _word = MutableLiveData<String>()
@@ -60,6 +73,21 @@ class GameViewModel : ViewModel() {
 
         // TODO (04) Copy over the CountDownTimer code and then update currentTime and
         // eventGameFinish appropriately as the timer ticks and finishes
+        timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
+            override fun onTick(millisUntilFinished: Long) {
+                //TODO("Not yet implemented")
+                _currentTime.value = (millisUntilFinished / ONE_SECOND)
+            }
+
+            override fun onFinish() {
+                //TODO("Not yet implemented")
+                _currentTime.value = DONE
+                _eventGameFinish.value = true
+            }
+        }
+
+        timer.start()
+
     }
 
     /**
@@ -67,27 +95,27 @@ class GameViewModel : ViewModel() {
      */
     private fun resetList() {
         wordList = mutableListOf(
-                "queen",
-                "hospital",
-                "basketball",
-                "cat",
-                "change",
-                "snail",
-                "soup",
-                "calendar",
-                "sad",
-                "desk",
-                "guitar",
-                "home",
-                "railway",
-                "zebra",
-                "jelly",
-                "car",
-                "crow",
-                "trade",
-                "bag",
-                "roll",
-                "bubble"
+            "queen",
+            "hospital",
+            "basketball",
+            "cat",
+            "change",
+            "snail",
+            "soup",
+            "calendar",
+            "sad",
+            "desk",
+            "guitar",
+            "home",
+            "railway",
+            "zebra",
+            "jelly",
+            "car",
+            "crow",
+            "trade",
+            "bag",
+            "roll",
+            "bubble"
         )
         wordList.shuffle()
     }
